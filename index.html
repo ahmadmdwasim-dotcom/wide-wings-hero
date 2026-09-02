@@ -100,17 +100,40 @@
   .brand__mark { width: clamp(38px, 5vw, 50px); height: auto; flex: none; display: block;
     filter: drop-shadow(0 4px 12px rgba(0,0,0,0.35)); }
   .brand__text {
-    font-family: var(--head); font-weight: 800; white-space: nowrap;
-    font-size: clamp(14px, 1.7vw, 17px); letter-spacing: 0.14em;
-    line-height: 1; color: #fff; text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
+    font-family: var(--head); color: #fff;
   }
-  .brand__text b { font-weight: 900; }
-  .brand__text small {
-    display: block; margin-top: 5px; white-space: nowrap;
+  .brand__word {
+    display: flex; white-space: nowrap;
+    font-weight: 800; font-size: clamp(14px, 1.7vw, 17px);
+    letter-spacing: 0.14em; line-height: 1; text-transform: uppercase;
+  }
+  .brand__word .bch {
+    display: inline-block;
+    transform-origin: 50% 55%;
+    animation: brandSpin 6s cubic-bezier(0.5, 0, 0.15, 1) calc(var(--i) * 0.12s) infinite;
+  }
+  .brand__word .bch--sp { width: 0.34em; animation: none; }   /* the space */
+  .brand__word .bch--bold { font-weight: 900; }
+  @keyframes brandSpin {
+    0%   { transform: rotate(0deg); }
+    9%   { transform: rotate(360deg); }
+    100% { transform: rotate(360deg); }   /* hold still for the rest of the loop */
+  }
+  .brand__subwrap { overflow: hidden; max-width: 100%; }
+  .brand__sub {
+    display: block; white-space: nowrap;
     font-family: var(--body); font-weight: 400;
     font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+    animation: brandSubFly 6s cubic-bezier(0.16, 0.8, 0.3, 1) 0.15s infinite;
   }
-  @media (max-width: 420px) { .brand__text small { display: none; } }
+  @keyframes brandSubFly {
+    0%   { transform: translateX(-120%); opacity: 0; }
+    8%   { opacity: 1; }
+    20%  { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  @media (max-width: 420px) { .brand__subwrap { display: none; } }
   .nav-links { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
   .nav-links a {
     color: var(--muted); text-decoration: none;
@@ -342,9 +365,11 @@
 
   @media (prefers-reduced-motion: reduce) {
     .logo-soar, .logo-flap, .logo-piece, .logo-stage::before, .debris,
-    .reveal, .ticker__track, .bfly, .bfly .wl, .bfly .wr, .ch--wings {
+    .reveal, .ticker__track, .bfly, .bfly .wl, .bfly .wr, .ch--wings,
+    .brand__word .bch, .brand__sub {
       animation: none !important;
     }
+    .brand__sub { opacity: 1 !important; transform: none !important; }
     .logo-piece, .reveal, .bfly { opacity: 1 !important; transform: none !important; filter: none !important; }
     .logo-stage::before { opacity: 1 !important; }
   }
@@ -356,7 +381,10 @@
   <nav class="nav reveal">
     <a class="brand" href="#" aria-label="Wide Wings Media home">
       <img class="brand__mark" src="logo-mark.png" alt="" />
-      <span class="brand__text">WIDE <b>WINGS</b><small>Media &amp; Advertisement</small></span>
+      <span class="brand__text">
+        <span class="brand__word" id="brandWord" aria-hidden="true">WIDE WINGS</span>
+        <span class="brand__subwrap"><small class="brand__sub">Media &amp; Advertisement</small></span>
+      </span>
     </a>
     <div class="nav-links">
       <a href="#">Home</a>
@@ -496,6 +524,26 @@
       chip.style.setProperty("--dy", rnd(-26, 26).toFixed(0) + "px");
       debris.appendChild(chip);
     }
+  }
+
+  /* ---- nav wordmark: split into characters that spin one by one on a loop ---- */
+  var brandWord = document.getElementById("brandWord");
+  if (brandWord) {
+    var text = brandWord.textContent;            // "WIDE WINGS"
+    var boldFrom = text.indexOf(" ") + 1;        // "WINGS" starts after the space
+    brandWord.textContent = "";
+    var vis = 0;
+    text.split("").forEach(function (chr, idx) {
+      var s = document.createElement("span");
+      if (chr === " ") {
+        s.className = "bch bch--sp";
+      } else {
+        s.className = "bch" + (idx >= boldFrom ? " bch--bold" : "");
+        s.textContent = chr;
+        s.style.setProperty("--i", vis++);
+      }
+      brandWord.appendChild(s);
+    });
   }
 
   /* ---- headline: wrap every letter, then magnify the ones near the cursor ---- */
