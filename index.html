@@ -96,16 +96,16 @@
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
     padding: clamp(16px, 3vw, 28px) clamp(20px, 5vw, 60px);
   }
-  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-  .brand__mark { width: clamp(38px, 5vw, 50px); height: auto; flex: none; display: block;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.35)); }
+  .brand { display: flex; align-items: center; gap: clamp(12px, 1.6vw, 18px); text-decoration: none; }
+  .brand__mark { width: clamp(52px, 7vw, 76px); height: auto; flex: none; display: block;
+    filter: drop-shadow(0 4px 14px rgba(0,0,0,0.4)); }
   .brand__text {
-    display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: clamp(4px, 0.6vw, 7px);
     font-family: var(--head); color: #fff;
   }
   .brand__word {
     display: flex; white-space: nowrap;
-    font-weight: 800; font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 800; font-size: clamp(18px, 2.6vw, 28px);
     letter-spacing: 0.14em; line-height: 1; text-transform: uppercase;
   }
   .brand__word .bch {
@@ -124,7 +124,8 @@
   .brand__sub {
     display: block; white-space: nowrap;
     font-family: var(--body); font-weight: 400;
-    font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+    font-size: clamp(9px, 1.15vw, 12px); letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted);
     animation: brandSubFly 6s cubic-bezier(0.16, 0.8, 0.3, 1) 0.15s infinite;
   }
   @keyframes brandSubFly {
@@ -133,7 +134,6 @@
     20%  { transform: translateX(0); opacity: 1; }
     100% { transform: translateX(0); opacity: 1; }
   }
-  @media (max-width: 420px) { .brand__subwrap { display: none; } }
   .nav-links { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
   .nav-links a {
     color: var(--muted); text-decoration: none;
@@ -353,14 +353,33 @@
   @media (max-width: 900px) {
     .nav-links, .nav-cta { display: none; }
     .nav-toggle {
-      display: block; width: 40px; height: 40px;
+      display: block; width: 42px; height: 42px; flex: none;
       border: 1px solid var(--line); border-radius: 10px; background: none;
     }
     .nav-toggle i, .nav-toggle::before, .nav-toggle::after {
       content: ""; display: block; width: 18px; height: 2px; margin: 3px auto; background: #fff;
     }
-    .logo-stage { width: min(280px, 68vw); }
-    .logo-piece { --fly: 78vmin; }
+    .logo-stage { width: min(300px, 70vw); }
+    .logo-piece { --fly: 82vmin; }
+  }
+
+  /* phones */
+  @media (max-width: 600px) {
+    .nav { padding: 14px 18px; gap: 14px; }
+    .brand__mark { width: clamp(44px, 12vw, 58px); }
+    .brand__word { font-size: clamp(16px, 5vw, 21px); letter-spacing: 0.1em; }
+    .brand__sub { font-size: clamp(8px, 2.4vw, 10px); letter-spacing: 0.14em; }
+    h1 { font-size: clamp(2rem, 9vw, 3rem); }
+    .sub { font-size: 1rem; }
+    .btn { padding: 15px 24px; font-size: 12px; }
+    .ticker__label { padding: 14px 16px; letter-spacing: 0.2em; }
+    .service { font-size: 1.02rem; padding: 0 18px; gap: 12px; }
+  }
+
+  @media (max-width: 400px) {
+    .brand__subwrap { display: none; }          /* keep the nav tidy on tiny screens */
+    .brand__word { font-size: 17px; }
+    h1 { font-size: 1.85rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
