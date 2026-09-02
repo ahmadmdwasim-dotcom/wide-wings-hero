@@ -72,6 +72,24 @@
     opacity: 0.13;
   }
 
+  /* faint logo shards scattered across the backdrop, each drifting a little */
+  .hero-debris {
+    position: absolute; inset: 0; z-index: 1;
+    overflow: hidden; pointer-events: none;
+  }
+  .debris {
+    position: absolute;
+    filter: blur(1.4px);
+    transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+    animation: drift var(--dur, 12s) ease-in-out var(--delay, 0s) infinite alternate;
+    will-change: transform;
+  }
+  @keyframes drift {
+    from { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)); }
+    to   { transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px)))
+                      rotate(calc(var(--rot, 0deg) + var(--spin, 10deg))); }
+  }
+
   /* ---------------- nav ---------------- */
   .nav {
     position: relative; z-index: 6;
@@ -323,7 +341,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .logo-soar, .logo-flap, .logo-piece, .logo-stage::before,
+    .logo-soar, .logo-flap, .logo-piece, .logo-stage::before, .debris,
     .reveal, .ticker__track, .bfly, .bfly .wl, .bfly .wr, .ch--wings {
       animation: none !important;
     }
@@ -447,6 +465,37 @@
       img.style.setProperty("--delay", (0.1 + ORDER.indexOf(i) * 0.1).toFixed(2) + "s");
       stack.appendChild(img);
     });
+  }
+
+  /* ---- scatter faint shards across the whole hero backdrop ---- */
+  var hero = document.querySelector(".hero");
+  if (hero) {
+    var debris = document.createElement("div");
+    debris.className = "hero-debris";
+    debris.setAttribute("aria-hidden", "true");
+    hero.insertBefore(debris, hero.firstChild);
+
+    var rnd = function (a, b) { return a + Math.random() * (b - a); };
+    var SLOTS = 15;
+    for (var d = 0; d < SLOTS; d++) {
+      var frag = PIECES[d % PIECES.length].f;   // reuse the already-loaded shard data
+      var chip = new Image();
+      chip.className = "debris";
+      chip.src = frag;
+      chip.alt = "";
+      chip.style.width = rnd(38, 120).toFixed(0) + "px";
+      chip.style.left = rnd(2, 98).toFixed(2) + "%";
+      chip.style.top = rnd(2, 98).toFixed(2) + "%";
+      chip.style.opacity = rnd(0.05, 0.13).toFixed(3);
+      var dur = rnd(9, 20);
+      chip.style.setProperty("--dur", dur.toFixed(1) + "s");
+      chip.style.setProperty("--delay", (-rnd(0, dur)).toFixed(1) + "s");
+      chip.style.setProperty("--rot", rnd(-40, 40).toFixed(0) + "deg");
+      chip.style.setProperty("--spin", rnd(-14, 14).toFixed(0) + "deg");
+      chip.style.setProperty("--dx", rnd(-26, 26).toFixed(0) + "px");
+      chip.style.setProperty("--dy", rnd(-26, 26).toFixed(0) + "px");
+      debris.appendChild(chip);
+    }
   }
 
   /* ---- headline: wrap every letter, then magnify the ones near the cursor ---- */
