@@ -100,12 +100,12 @@
   .brand__mark { width: clamp(52px, 7vw, 76px); height: auto; flex: none; display: block;
     filter: drop-shadow(0 4px 14px rgba(0,0,0,0.4)); }
   .brand__text {
-    display: flex; flex-direction: column; align-items: flex-start; gap: clamp(4px, 0.6vw, 7px);
+    display: flex; flex-direction: column; align-items: flex-start; gap: clamp(1px, 0.25vw, 3px);
     font-family: var(--head); color: #fff;
   }
   .brand__word {
     display: flex; white-space: nowrap;
-    font-weight: 800; font-size: clamp(18px, 2.6vw, 28px);
+    font-weight: 800; font-size: clamp(17px, 2.3vw, 24px);
     letter-spacing: 0.14em; line-height: 1; text-transform: uppercase;
   }
   .brand__word .bch {
@@ -124,8 +124,9 @@
   .brand__sub {
     display: block; white-space: nowrap;
     font-family: var(--body); font-weight: 400;
-    font-size: clamp(9px, 1.15vw, 12px); letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--muted);
+    font-size: clamp(11px, 1.4vw, 14px); letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fff1a0;                     /* light neon yellow */
     animation: brandSubFly 6s cubic-bezier(0.16, 0.8, 0.3, 1) 0.15s infinite;
   }
   @keyframes brandSubFly {
@@ -138,7 +139,7 @@
   .nav-links a {
     color: var(--muted); text-decoration: none;
     font-family: var(--head); font-weight: 700;
-    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-size: clamp(11px, 1.4vw, 14px); letter-spacing: 0.12em; text-transform: uppercase;
     transition: color 0.25s var(--ease);
   }
   .nav-links a:hover { color: var(--ink); }
@@ -367,8 +368,8 @@
   @media (max-width: 600px) {
     .nav { padding: 14px 18px; gap: 14px; }
     .brand__mark { width: clamp(44px, 12vw, 58px); }
-    .brand__word { font-size: clamp(16px, 5vw, 21px); letter-spacing: 0.1em; }
-    .brand__sub { font-size: clamp(8px, 2.4vw, 10px); letter-spacing: 0.14em; }
+    .brand__word { font-size: clamp(16px, 4.6vw, 21px); letter-spacing: 0.1em; }
+    .brand__sub { font-size: clamp(10px, 2.8vw, 12px); letter-spacing: 0.14em; }
     h1 { font-size: clamp(2rem, 9vw, 3rem); }
     .sub { font-size: 1rem; }
     .btn { padding: 15px 24px; font-size: 12px; }
