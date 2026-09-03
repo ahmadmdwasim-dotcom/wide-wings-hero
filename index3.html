@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wide Wings Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Nexa / Calibri are the brand fonts. Montserrat + Carlito are metric-close
+     web fallbacks so this prototype renders right without the licensed files. -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Carlito:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  /* =====================================================================
+     WIDE WINGS MEDIA — hero, version 3
+     Left: the brand mark rendered as a living particle field that keeps
+     swirling and reforms on load / on pointer. Right: the pitch.
+     Dark, minimal, motion-led — brand palette, Nexa/Calibri (fallbacks),
+     inline SVG only, no emojis, no icon packs.
+     ===================================================================== */
+
+  :root {
+    --indigo:        #2e2e62;
+    --indigo-deep:   #0d0d2b;
+    --bg:            #07070f;
+    --bg-2:          #0c0c1c;
+    --magenta:       #b62d83;
+    --gold-bright:   #dcb920;
+    --amber:         #e48900;
+    --orange:        #c55b03;
+    --blue-light:    #6ba0ba;
+    --ink:           #ffffff;
+    --muted:         rgba(255,255,255,0.62);
+    --faint:         rgba(255,255,255,0.40);
+    --line:          rgba(255,255,255,0.12);
+    --neon:          #fff1a0;
+
+    --head: "Nexa", "Montserrat", "Arial", system-ui, sans-serif;
+    --body: "Calibri", "Carlito", system-ui, sans-serif;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); }
+  body {
+    font-family: var(--body);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; }
+  a { color: inherit; }
+
+  /* ---------------- shell ---------------- */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(50% 45% at 26% 46%, rgba(167,49,132,0.16) 0%, rgba(167,49,132,0) 62%),
+      radial-gradient(46% 44% at 22% 74%, rgba(82,98,138,0.14) 0%, rgba(82,98,138,0) 60%),
+      radial-gradient(50% 40% at 30% 22%, rgba(228,137,0,0.10) 0%, rgba(228,137,0,0) 60%),
+      linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 60%);
+  }
+  .hero::after {              /* faint grid, fades out toward edges */
+    content: "";
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 100% 88px, 88px 100%;
+    mask-image: radial-gradient(70% 60% at 50% 45%, #000 0%, transparent 78%);
+    opacity: 0.5;
+  }
+
+  /* ---------------- drifting 3D shapes ---------------- */
+  .floaters {
+    position: absolute; inset: 0; z-index: 1;
+    overflow: hidden; pointer-events: none;
+    perspective: 1000px;
+    mask-image: radial-gradient(120% 120% at 50% 50%, #000 55%, transparent 100%);
+  }
+  .fl {
+    position: absolute; top: 0; left: 0;
+    transform-style: preserve-3d;
+    animation: flDrift var(--dur, 24s) ease-in-out var(--delay, 0s) infinite alternate;
+    will-change: transform;
+  }
+  @keyframes flDrift {
+    from { transform: translate3d(var(--x0), var(--y0), var(--z0)); }
+    to   { transform: translate3d(var(--x1), var(--y1), var(--z1)); }
+  }
+  .fl .spin {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: flSpin var(--spin, 18s) linear infinite;
+    filter: blur(var(--blur, 0.6px));
+  }
+  @keyframes flSpin { to { transform: rotateX(360deg) rotateY(360deg) rotateZ(120deg); } }
+
+  .fl .face {
+    position: absolute; inset: 0;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(167,49,132,0.09);
+  }
+  .fl .face--tri {
+    border: none;
+    clip-path: polygon(50% 3%, 97% 95%, 3% 95%);
+    filter: drop-shadow(0 0 0.7px rgba(255,255,255,0.35));
+  }
+  .fl .face--ball {
+    border: none; border-radius: 50%;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.4);
+  }
+
+  /* ---------------- floating nav ---------------- */
+  .nav {
+    position: relative; z-index: 8;
+    margin: clamp(16px, 2.4vw, 26px) auto 0;
+    width: min(1180px, calc(100% - clamp(24px, 5vw, 60px)));
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    padding: 12px 14px 12px clamp(16px, 2vw, 22px);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(12,12,26,0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: none; }
+  .brand__mark { width: clamp(34px, 3.4vw, 42px); height: auto; display: block; flex: none;
+    filter: drop-shadow(0 3px 10px rgba(0,0,0,0.4)); }
+  .brand__text {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    font-family: var(--head); color: #fff;
+  }
+  .brand__word {
+    display: flex; white-space: nowrap;
+    font-weight: 800; font-size: clamp(14px, 1.5vw, 17px);
+    letter-spacing: 0.12em; line-height: 1; text-transform: uppercase;
+  }
+  .brand__word .bch {
+    display: inline-block; transform-origin: 50% 55%;
+    animation: brandSpin 6s cubic-bezier(0.5, 0, 0.15, 1) calc(var(--i) * 0.12s) infinite;
+  }
+  .brand__word .bch--sp { width: 0.32em; animation: none; }
+  .brand__word .bch--bold { font-weight: 900; }
+  @keyframes brandSpin { 0% { transform: rotate(0); } 9% { transform: rotate(360deg); } 100% { transform: rotate(360deg); } }
+  .brand__subwrap { overflow: hidden; }
+  .brand__sub {
+    display: block; white-space: nowrap;
+    font-family: var(--body); font-size: clamp(8px, 0.9vw, 9.5px);
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--neon);
+    animation: brandSubFly 6s cubic-bezier(0.16, 0.8, 0.3, 1) 0.15s infinite;
+  }
+  @keyframes brandSubFly {
+    0% { transform: translateX(-120%); opacity: 0; }
+    8% { opacity: 1; } 20%,100% { transform: translateX(0); opacity: 1; }
+  }
+  .nav-links { display: flex; align-items: center; gap: clamp(10px, 1.4vw, 20px); }
+  .nav-links a {
+    display: inline-flex; align-items: baseline; gap: 6px;
+    color: var(--muted); text-decoration: none;
+    font-family: var(--head); font-weight: 600;
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    transition: color 0.2s var(--ease);
+  }
+  .nav-links a i {
+    font-style: normal; font-size: 9px; color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta {
+    flex: none;
+    font-family: var(--head); font-weight: 800;
+    font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 11px 18px; border-radius: 999px;
+    background: linear-gradient(100deg, var(--magenta), var(--orange) 58%, var(--gold-bright));
+    color: #fff; text-decoration: none;
+    box-shadow: 0 10px 26px -12px rgba(182,45,131,0.6);
+  }
+  .nav-toggle { display: none; }
+
+  /* ---------------- hero grid ---------------- */
+  .hero__grid {
+    position: relative; z-index: 5;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.02fr 1fr;
+    align-items: center;
+    gap: clamp(24px, 4vw, 60px);
+    width: min(1180px, calc(100% - clamp(24px, 5vw, 60px)));
+    margin: 0 auto;
+    padding: clamp(24px, 4vh, 56px) 0;
+  }
+
+  /* left: particle canvas */
+  .hero__art {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-height: 74vh;
+    justify-self: center;
+  }
+  #pcanvas {
+    display: block; width: 100%; height: 100%;
+    filter: saturate(1.5) brightness(1.46) contrast(1.06);
+    transition: opacity 0.7s ease;
+  }
+  /* the real logo — shown when idle, hidden while the particles play */
+  .logo-solid {
+    position: absolute; left: 9%; top: 9%; width: 82%; height: 82%;
+    object-fit: contain; pointer-events: none;
+    opacity: 0; transition: opacity 0.7s ease;
+    filter: drop-shadow(0 14px 34px rgba(0,0,0,0.45));
+  }
+  .hero__art.is-solid #pcanvas   { opacity: 0.08; }
+  .hero__art.is-solid .logo-solid { opacity: 1; }
+  .hero__art { cursor: pointer; }
+  .hero__art::before {           /* soft glow puddle behind the particles */
+    content: ""; position: absolute; inset: -4% -4% 2%;
+    background: radial-gradient(58% 62% at 50% 56%,
+      rgba(228,137,0,0.24), rgba(167,49,132,0.15) 44%, rgba(82,98,138,0.10) 64%, transparent 80%);
+    filter: blur(30px); z-index: -1;
+  }
+
+  /* right: the pitch */
+  .hero__content { max-width: 34rem; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px; white-space: nowrap;
+    font-family: var(--head); font-weight: 500;
+    font-size: clamp(9.5px, 1vw, 11px); letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--faint);
+  }
+  .eyebrow b { color: var(--neon); font-weight: 700; }
+  .eyebrow span { width: 4px; height: 4px; border-radius: 50%; background: var(--faint); }
+
+  h1 {
+    font-family: var(--head); font-weight: 300;
+    font-size: clamp(2.5rem, 5.6vw, 4.5rem);
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin: 16px 0 0;
+  }
+  h1 .hw { display: inline-block; white-space: nowrap; }   /* keep words unbroken */
+  h1 .capG {                  /* oversized, hairline initial */
+    font-size: 1.42em; font-weight: 100;
+  }
+  h1 .thinY { font-weight: 100; }
+  h1 .em { font-weight: 900; }
+
+  /* per-character magnifier */
+  h1 .hch {
+    display: inline-block;
+    transform-origin: 50% 66%;
+    transition: transform 0.16s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: transform;
+  }
+  h1 .grad, h1 .hch--grad {
+    background: linear-gradient(100deg,
+      var(--magenta) 0%, var(--orange) 26%, var(--gold-bright) 50%,
+      var(--orange) 74%, var(--magenta) 100%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: gradFlow 4.5s linear infinite;
+  }
+  @keyframes gradFlow {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: -220% 50%; }
+  }
+
+  .strap {
+    margin-top: 20px;
+    font-family: var(--head); font-weight: 400;
+    font-size: clamp(1.4rem, 2.6vw, 1.95rem);
+    line-height: 1.26; letter-spacing: 0.035em; color: var(--muted);
+  }
+  .strap .rot {                              /* its own line, below */
+    display: block; margin-top: 7px; min-height: 1.3em;
+    font-weight: 800; font-size: 1.02em;
+    letter-spacing: 0.04em;
+    color: #ffc63a;
+  }
+  .strap .rot span {
+    display: inline-block;
+    color: #ffc63a;                          /* single colour, not a gradient */
+    opacity: 1;                               /* resting state: fully visible */
+    animation: rotDown 0.5s var(--ease) both;
+  }
+  @keyframes rotDown {                        /* never fully hides, even if frame-throttled */
+    0%   { opacity: 0.35; transform: translateY(-0.45em); }
+    55%  { opacity: 1; }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .sub {
+    margin-top: 22px; max-width: 48ch;
+    font-family: var(--body); font-size: 1.26rem; line-height: 1.7;
+    letter-spacing: 0.014em;
+    color: var(--muted);
+  }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 11px;
+    font-family: var(--head); font-weight: 800;
+    font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase;
+    text-decoration: none; padding: 17px 28px; border-radius: 999px;
+    cursor: pointer; border: 1px solid transparent;
+    transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), background 0.22s var(--ease);
+  }
+  .btn--primary {
+    color: #fff; font-weight: 900;
+    background: #dd5a10;                       /* single orange — darker for text contrast */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+    box-shadow: 0 14px 36px -14px rgba(232,100,28,0.7);
+  }
+  .btn--primary:hover {
+    transform: translateY(-2px);
+    background: #f2732c;
+    box-shadow: 0 20px 44px -14px rgba(232,100,28,0.9);
+  }
+  .btn--primary svg { transition: transform 0.22s var(--ease); }
+  .btn--primary:hover svg { transform: translateX(4px); }
+  .btn--ghost { color: #fff; border-color: var(--line); }
+  .btn--ghost:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.36); }
+
+  .scroll-hint {
+    display: inline-flex; align-items: center; gap: 9px;
+    margin-top: 34px;
+    font-family: var(--head); font-weight: 600;
+    font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--faint);
+  }
+  .scroll-hint svg { animation: bob 1.8s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+  /* ---------------- responsive ---------------- */
+  @media (max-width: 1000px) {
+    .nav-links, .nav-cta { display: none; }
+    .nav { width: calc(100% - clamp(20px, 6vw, 40px)); }
+    .nav-toggle {
+      display: block; width: 40px; height: 40px; flex: none;
+      border: 1px solid var(--line); border-radius: 12px; background: none;
+    }
+    .nav-toggle i, .nav-toggle::before, .nav-toggle::after {
+      content: ""; display: block; width: 17px; height: 2px; margin: 3px auto; background: #fff;
+    }
+    .hero__grid {
+      grid-template-columns: 1fr;
+      justify-items: center; text-align: center;
+      gap: clamp(12px, 3vh, 28px);
+      padding-top: clamp(90px, 14vh, 130px);
+    }
+    .hero__art { max-width: 440px; max-height: 46vh; order: -1; }
+    .hero__content { max-width: 40rem; }
+    .eyebrow, .cta-row { justify-content: center; }
+    .sub { margin-left: auto; margin-right: auto; }
+  }
+  @media (max-width: 560px) {
+    .nav { padding: 10px 10px 10px 14px; }
+    .brand__subwrap { display: none; }
+    h1 { font-size: clamp(1.9rem, 8vw, 2.5rem); }
+    .btn { flex: 1 1 auto; justify-content: center; }
+    .eyebrow { white-space: normal; }
+    .eyebrow b + span, .eyebrow b { display: none; }   /* just "Media & Advertisement" */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand__word .bch, .brand__sub, .strap .rot span, .scroll-hint svg,
+    h1 .grad, h1 .hch--grad { animation: none !important; }
+    h1 .hch { transform: none !important; }
+    .brand__sub { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+
+  <nav class="nav">
+    <a class="brand" href="#" aria-label="Wide Wings Media home">
+      <img class="brand__mark" src="logo-mark.png" alt="" />
+      <span class="brand__text">
+        <span class="brand__word" id="brandWord" aria-hidden="true">WIDE WINGS</span>
+        <span class="brand__subwrap"><small class="brand__sub">Media &amp; Advertisement</small></span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="#"><i>01</i> Home</a>
+      <a href="#"><i>02</i> Services</a>
+      <a href="#"><i>03</i> Work</a>
+      <a href="#"><i>04</i> About</a>
+      <a href="#"><i>05</i> Contact</a>
+    </div>
+    <a class="nav-cta" href="#">Start a project</a>
+    <button class="nav-toggle" aria-label="Menu"><i></i></button>
+  </nav>
+
+  <div class="hero__grid">
+    <div class="hero__art" aria-hidden="true">
+      <canvas id="pcanvas"></canvas>
+      <img class="logo-solid" src="logo-mark.png" alt="" />
+    </div>
+
+    <div class="hero__content">
+      <p class="eyebrow"><b>Wide Wings</b> <span></span> Media &amp; Advertisement</p>
+      <h1 id="headline"><span class="hw"><span class="capG">G</span>ive</span> <span class="hw"><span class="thinY">y</span>our</span> <span class="hw">brand</span> <span class="hw"><span class="em grad">WINGS</span></span></h1>
+      <p class="strap">Your growth partner for<span class="rot" id="rot"><span>Web &amp; App Development</span></span></p>
+      <p class="sub">
+        Strategy, creative and media under one roof. We build brands that fly &mdash;
+        and keep them airborne with work that performs.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn--primary" href="#">
+          Free Consultation
+          <svg width="15" height="11" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+            <path d="M1 6h13M9 1l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a class="btn btn--ghost" href="#">Explore Services</a>
+      </div>
+      <p class="scroll-hint">
+        Scroll to explore
+        <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true">
+          <path d="M6 1v11M1.5 7.5 6 12l4.5-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </p>
+    </div>
+  </div>
+
+</header>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- drifting 3D shapes: cubes, triangles, spheres across the hero ---- */
+  (function buildFloaters() {
+    var host = document.querySelector(".hero");
+    if (!host || reduce) return;
+    var wrap = document.createElement("div");
+    wrap.className = "floaters";
+    wrap.setAttribute("aria-hidden", "true");
+    host.insertBefore(wrap, host.firstChild);
+
+    var FILLS = [
+      "rgba(167,49,132,0.10)", "rgba(228,137,0,0.10)", "rgba(82,98,138,0.13)",
+      "rgba(220,185,32,0.09)", "rgba(107,160,186,0.12)"
+    ];
+    var rnd = function (a, b) { return a + Math.random() * (b - a); };
+    var pick = function (a) { return a[(Math.random() * a.length) | 0]; };
+
+    function shell(size) {
+      var s = document.createElement("div");
+      s.className = "spin";
+      s.style.width = size + "px";
+      s.style.height = size + "px";
+      return s;
+    }
+    function cube(size) {
+      var s = shell(size), h = size / 2, fill = pick(FILLS);
+      var t = [
+        "translateZ(" + h + "px)", "rotateY(180deg) translateZ(" + h + "px)",
+        "rotateY(90deg) translateZ(" + h + "px)", "rotateY(-90deg) translateZ(" + h + "px)",
+        "rotateX(90deg) translateZ(" + h + "px)", "rotateX(-90deg) translateZ(" + h + "px)"
+      ];
+      t.forEach(function (tr) {
+        var f = document.createElement("span");
+        f.className = "face";
+        f.style.transform = tr;
+        f.style.background = fill;
+        s.appendChild(f);
+      });
+      return s;
+    }
+    function triangle(size) {
+      var s = shell(size), fill = pick(FILLS);
+      [0, 180].forEach(function (deg) {
+        var f = document.createElement("span");
+        f.className = "face face--tri";
+        f.style.transform = "rotateY(" + deg + "deg) translateZ(0.5px)";
+        f.style.background = fill;
+        s.appendChild(f);
+      });
+      return s;
+    }
+    function sphere(size) {
+      var s = shell(size);
+      var c = pick(FILLS).replace(/0\.\d+\)/, "0.55)");
+      var f = document.createElement("span");
+      f.className = "face face--ball";
+      f.style.background =
+        "radial-gradient(circle at 34% 30%, rgba(255,255,255,0.30), " + c + " 46%, rgba(4,4,12,0.6))";
+      s.appendChild(f);
+      return s;
+    }
+    var makers = [cube, triangle, sphere];
+
+    var N = window.innerWidth < 720 ? 8 : 13;
+    for (var i = 0; i < N; i++) {
+      var fl = document.createElement("div");
+      fl.className = "fl";
+      var x = rnd(-5, 95), y = rnd(-6, 96);
+      fl.style.setProperty("--x0", x.toFixed(1) + "vw");
+      fl.style.setProperty("--y0", y.toFixed(1) + "vh");
+      fl.style.setProperty("--z0", rnd(-200, 40).toFixed(0) + "px");
+      fl.style.setProperty("--x1", (x + rnd(-13, 13)).toFixed(1) + "vw");
+      fl.style.setProperty("--y1", (y + rnd(-15, 15)).toFixed(1) + "vh");
+      fl.style.setProperty("--z1", rnd(-200, 40).toFixed(0) + "px");
+      fl.style.setProperty("--dur", rnd(16, 36).toFixed(1) + "s");
+      fl.style.setProperty("--delay", (-rnd(0, 24)).toFixed(1) + "s");
+
+      var sp = makers[i % 3](rnd(38, 116));
+      sp.style.setProperty("--spin", rnd(12, 32).toFixed(1) + "s");
+      sp.style.setProperty("--blur", rnd(0.5, 1.8).toFixed(2) + "px");
+      sp.style.opacity = rnd(0.14, 0.34).toFixed(2);
+      fl.appendChild(sp);
+      wrap.appendChild(fl);
+    }
+  })();
+
+  /* ---- nav wordmark: per-character spin loop ---- */
+  var brandWord = document.getElementById("brandWord");
+  if (brandWord) {
+    var text = brandWord.textContent, boldFrom = text.indexOf(" ") + 1, vis = 0;
+    brandWord.textContent = "";
+    text.split("").forEach(function (chr, idx) {
+      var s = document.createElement("span");
+      if (chr === " ") { s.className = "bch bch--sp"; }
+      else {
+        s.className = "bch" + (idx >= boldFrom ? " bch--bold" : "");
+        s.textContent = chr; s.style.setProperty("--i", vis++);
+      }
+      brandWord.appendChild(s);
+    });
+  }
+
+  /* ---- rotating strapline word ---- */
+  var ROT = [
+    "Web & App Development",
+    "Creative & Branding",
+    "Paid Advertising",
+    "Media Buying",
+    "Social Media Management",
+    "Content Creation",
+    "Email Marketing",
+    "SEO Management",
+    "OOH Advertising",
+    "PR Management"
+  ];
+  var rot = document.getElementById("rot");
+  if (rot && !reduce) {
+    var ri = 0;
+    setInterval(function () {
+      ri = (ri + 1) % ROT.length;
+      rot.innerHTML = '<span>' + ROT[ri] + '</span>';
+    }, 2800);
+  }
+
+  /* ---- headline: split into characters, magnify the ones near the cursor ---- */
+  var headline = document.getElementById("headline");
+  if (headline) {
+    headline.querySelectorAll(".hw").forEach(function (word) {
+      Array.prototype.slice.call(word.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) {                       // raw text -> per-char spans
+          var frag = document.createDocumentFragment();
+          node.textContent.split("").forEach(function (chr) {
+            if (chr === " ") { frag.appendChild(document.createTextNode(" ")); return; }
+            var s = document.createElement("span");
+            s.className = "hch";
+            s.textContent = chr;
+            frag.appendChild(s);
+          });
+          word.replaceChild(frag, node);
+        } else if (node.classList && node.classList.contains("grad")) {
+          var txt = node.textContent, gf = document.createDocumentFragment();
+          txt.split("").forEach(function (chr) {
+            var s = document.createElement("span");
+            s.className = "hch hch--grad";
+            s.textContent = chr;
+            gf.appendChild(s);
+          });
+          node.textContent = "";
+          node.appendChild(gf);
+        } else if (node.classList) {                     // capG / thinY — already one char
+          node.classList.add("hch");
+        }
+      });
+    });
+
+    if (!reduce) {
+      var hchars = Array.prototype.slice.call(headline.querySelectorAll(".hch"));
+      var hc = [];
+      var HR = 135, HAMP = 0.55, HLIFT = 9;
+
+      var hmeasure = function () {
+        hchars.forEach(function (c) { c.style.transform = ""; });
+        hc = hchars.map(function (c) {
+          var r = c.getBoundingClientRect();
+          return { c: c, x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        });
+      };
+      var hmove = function (e) {
+        for (var i = 0; i < hc.length; i++) {
+          var p = hc[i], dx = e.clientX - p.x, dy = e.clientY - p.y;
+          var d = Math.sqrt(dx * dx + dy * dy);
+          var tt = d < HR ? (1 - d / HR) : 0;
+          tt = tt * tt;
+          p.c.style.transform = tt
+            ? "translateY(" + (-HLIFT * tt) + "px) scale(" + (1 + HAMP * tt) + ")"
+            : "";
+        }
+      };
+      var hreset = function () { hchars.forEach(function (c) { c.style.transform = ""; }); };
+
+      headline.addEventListener("pointerenter", hmeasure);
+      headline.addEventListener("pointermove", hmove);
+      headline.addEventListener("pointerleave", hreset);
+      window.addEventListener("resize", hreset);
+    }
+  }
+
+  /* ---- the particle mark ---- */
+  var canvas = document.getElementById("pcanvas");
+  var ctx = canvas.getContext("2d", { alpha: true });
+  var W = 0, H = 0, DPR = 1, cx = 0, cy = 0;
+  var particles = [];      // flat list, for physics carry-over on resize
+  var buckets = [];        // particles grouped by quantised colour -> few fillStyle changes/frame
+  var t = 0, raf = 0, visible = true;
+  var pointer = { x: -9999, y: -9999, on: false };
+  var img = new Image();
+  img.src = "logo-mark.png";
+
+  // lift + punch each sampled colour so the mark reads vivid on the dark bg
+  // (gamma curve raises the dark navy hard, keeps the brights near white)
+  function bright(v) {
+    v = ((v >> 4) << 4) + 8;
+    return Math.min(255, Math.round(Math.pow(v / 255, 0.8) * 255 * 1.13 + 22));
+  }
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var r = canvas.getBoundingClientRect();
+    W = Math.max(1, r.width); H = Math.max(1, r.height);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    cx = W / 2; cy = H / 2;
+  }
+
+  function build() {
+    resize();
+    if (!img.width) return;
+    var fit = Math.min((W * 0.82) / img.width, (H * 0.82) / img.height);
+    var dw = Math.max(1, Math.round(img.width * fit));
+    var dh = Math.max(1, Math.round(img.height * fit));
+    var off = document.createElement("canvas");
+    off.width = dw; off.height = dh;
+    var octx = off.getContext("2d");
+    octx.drawImage(img, 0, 0, dw, dh);
+    var data;
+    try { data = octx.getImageData(0, 0, dw, dh).data; }
+    catch (e) { return; }
+
+    // finer dot-matrix — tiny particles, tight spacing (halftone feel).
+    // Derive the sampling step from a particle budget so the density is the
+    // same at any canvas size AND the whole W is covered (no truncation).
+    var small = window.innerWidth < 820;
+    var TARGET = small ? 7500 : 15000;
+    var opaque = 0;
+    for (var oyy = 0; oyy < dh; oyy++) {
+      var rowOff = oyy * dw;
+      for (var oxx = 0; oxx < dw; oxx++) {
+        if (data[(rowOff + oxx) * 4 + 3] >= 70) opaque++;
+      }
+    }
+    var step = Math.max(1, Math.round(Math.sqrt(opaque / TARGET)));
+
+    var ox = (W - dw) / 2, oy = (H - dh) / 2;
+    var flat = [];
+    var map = {};
+    buckets = [];
+    for (var y = 0; y < dh; y += step) {
+      for (var x = 0; x < dw; x += step) {
+        var i = (y * dw + x) * 4;
+        if (data[i + 3] < 70) continue;
+        var r = data[i], g = data[i + 1], b = data[i + 2];
+        var jx = (Math.random() - 0.5) * step * 0.5, jy = (Math.random() - 0.5) * step * 0.5;
+        var p = {
+          hx: ox + x + jx, hy: oy + y + jy,
+          x: cx + (Math.random() - 0.5) * W * 1.6,
+          y: cy + (Math.random() - 0.5) * H * 1.6,
+          vx: 0, vy: 0,
+          s: 0.45 + Math.random() * 0.55,
+          ph: Math.random() * 6.283,
+          sp: 0.7 + Math.random() * 0.7,
+          amp: 0.55 + Math.random() * 0.95
+        };
+        flat.push(p);
+        var key = (r >> 4) << 8 | (g >> 4) << 4 | (b >> 4);   // 4-bit/channel -> few buckets
+        var bk = map[key];
+        if (!bk) {
+          var R = bright(r), G = bright(g), B = bright(b);
+          bk = map[key] = {
+            c: "rgb(" + R + "," + G + "," + B + ")",
+            cg: "rgba(" + R + "," + G + "," + B + ",0.24)",   // soft glow halo
+            list: []
+          };
+          buckets.push(bk);
+        }
+        bk.list.push(p);
+      }
+    }
+    // carry positions across a resize so the field doesn't snap
+    for (var k = 0; k < flat.length && k < particles.length; k++) {
+      flat[k].x = particles[k].x; flat[k].y = particles[k].y;
+    }
+    particles = flat;
+  }
+
+  function frame() {
+    raf = 0;
+    t += 0.016;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = "lighter";
+
+    var breathe = 1 + Math.sin(t * 0.5) * 0.012;
+    var pon = pointer.on, ppx = pointer.x, ppy = pointer.y;
+
+    for (var b = 0; b < buckets.length; b++) {
+      var bk = buckets[b], list = bk.list, n = list.length, i, p;
+
+      // pass 1 — run physics + lay down a soft glow halo
+      ctx.fillStyle = bk.cg;
+      for (i = 0; i < n; i++) {
+        p = list[i];
+        var homeX = cx + (p.hx - cx) * breathe + Math.sin(t * p.sp + p.ph) * p.amp;
+        var homeY = cy + (p.hy - cy) * breathe + Math.cos(t * p.sp * 0.9 + p.ph) * p.amp;
+        p.vx += (homeX - p.x) * 0.14;
+        p.vy += (homeY - p.y) * 0.14;
+        if (pon) {
+          var dx = p.x - ppx, dy = p.y - ppy, d2 = dx * dx + dy * dy;
+          if (d2 < 13225) {                       // 115^2
+            var d = Math.sqrt(d2) || 1, f = (1 - d / 115) * 6;
+            p.vx += (dx / d) * f; p.vy += (dy / d) * f;
+          }
+        }
+        p.vx *= 0.78; p.vy *= 0.78;
+        p.x += p.vx; p.y += p.vy;
+        ctx.fillRect(p.x - 0.9, p.y - 0.9, p.s + 1.8, p.s + 1.8);
+      }
+
+      // pass 2 — bright crisp core
+      ctx.fillStyle = bk.c;
+      for (i = 0; i < n; i++) {
+        p = list[i];
+        ctx.fillRect(p.x, p.y, p.s, p.s);
+      }
+    }
+    ctx.globalCompositeOperation = "source-over";
+    if (visible) raf = requestAnimationFrame(frame);
+  }
+
+  var art = canvas.closest(".hero__art");
+  var solid = false, solidTimer = 0;
+
+  function start() { if (!raf && visible && !solid) raf = requestAnimationFrame(frame); }
+  function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+
+  // idle -> reveal the real logo over the (paused) particle field
+  function toSolid() {
+    clearTimeout(solidTimer);
+    if (solid) return;
+    solid = true;
+    if (art) art.classList.add("is-solid");
+    setTimeout(stop, 720);            // stop the loop once the crossfade is done
+  }
+  // touched -> bring the particles back to life
+  function toParticles() {
+    clearTimeout(solidTimer);
+    if (solid) { solid = false; if (art) art.classList.remove("is-solid"); }
+    start();
+  }
+  function scheduleSolid(delay) {
+    clearTimeout(solidTimer);
+    solidTimer = setTimeout(toSolid, delay);
+  }
+
+  function drawStatic() {
+    resize();
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = "lighter";
+    for (var b = 0; b < buckets.length; b++) {
+      var list = buckets[b].list, i, p;
+      ctx.fillStyle = buckets[b].cg;
+      for (i = 0; i < list.length; i++) { p = list[i]; ctx.fillRect(p.hx - 0.9, p.hy - 0.9, p.s + 1.8, p.s + 1.8); }
+      ctx.fillStyle = buckets[b].c;
+      for (i = 0; i < list.length; i++) { p = list[i]; ctx.fillRect(p.hx, p.hy, p.s, p.s); }
+    }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  img.onload = function () {
+    build();
+    if (reduce) {                       // no motion: just show the real logo
+      drawStatic();
+      if (art) art.classList.add("is-solid");
+      return;
+    }
+    start();
+    scheduleSolid(2800);                 // let the particles assemble, then reveal the logo
+  };
+  img.onerror = function () { /* leave the glow puddle */ };
+
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { build(); if (reduce) drawStatic(); }, 180);
+  });
+
+  if (!reduce) {
+    var hotZone = art || canvas;
+    hotZone.addEventListener("pointerenter", toParticles);
+    hotZone.addEventListener("pointermove", function (e) {
+      var r = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - r.left; pointer.y = e.clientY - r.top; pointer.on = true;
+      if (solid) toParticles();
+    });
+    hotZone.addEventListener("pointerleave", function () {
+      pointer.on = false;
+      scheduleSolid(1300);              // settle back to the real logo shortly after
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      visible = !document.hidden;
+      if (visible) start(); else stop();
+    });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (en) {
+        visible = en[0].isIntersecting && !document.hidden;
+        if (visible) start(); else stop();
+      }, { threshold: 0.05 }).observe(canvas);
+    }
+  }
+})();
+</script>
+</body>
+</html>
