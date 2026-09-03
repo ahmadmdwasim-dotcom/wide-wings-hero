@@ -73,40 +73,27 @@
             mask: linear-gradient(180deg, #000 0%, #000 66%, transparent 90%);
   }
 
-  /* ---------------- molten "lava" flowing along the bottom ---------------- */
+  /* ---------------- thin molten "lava" line along the hero bottom ---------------- */
   .lava {
     position: absolute; left: 0; right: 0; bottom: 0;
-    height: clamp(130px, 19vh, 220px);
-    z-index: 3; pointer-events: none; overflow: hidden;
+    height: 3px; z-index: 7; pointer-events: none;
+    background: linear-gradient(90deg, #dcb920, #ff7a3c, #c33b31, #a73184, #ff7a3c, #dcb920);
+    background-size: 300% 100%;
+    box-shadow:
+      0 0 12px 1px rgba(255,120,60,0.6),
+      0 0 30px 4px rgba(195,59,49,0.4),
+      0 0 60px 8px rgba(167,49,132,0.25);
+    animation: lavaFlow 7s linear infinite;
   }
-  .lava__wave {
-    position: absolute; left: -25%; bottom: 0;
-    width: 150%; height: 100%;
-    filter: drop-shadow(0 -6px 26px rgba(255,120,60,0.5)) drop-shadow(0 -2px 8px rgba(255,210,120,0.55));
-    animation: lavaDrift 14s ease-in-out infinite alternate;
+  .lava::before {                 /* soft heat-haze glow rising off the line */
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46px;
+    background: linear-gradient(180deg, transparent, rgba(255,120,60,0.14) 55%, rgba(255,170,90,0.22));
+    -webkit-mask: linear-gradient(180deg, transparent, #000);
+            mask: linear-gradient(180deg, transparent, #000);
+    animation: lavaHaze 4.5s ease-in-out infinite;
   }
-  .lava__wave path { animation: lavaMorph 9s ease-in-out infinite alternate; }
-  .lava__wave--back { opacity: 0.5; animation-duration: 19s; animation-direction: alternate-reverse; filter: blur(3px); }
-  .lava__wave--back path { animation-duration: 12s; }
-  @keyframes lavaDrift  { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
-  @keyframes lavaMorph  {
-    0%   { d: path("M0,120 C160,60 320,180 520,120 C720,60 900,170 1120,110 C1240,80 1300,120 1440,100 L1440,320 L0,320 Z"); }
-    100% { d: path("M0,150 C180,210 340,80 560,140 C760,195 940,70 1140,150 C1260,195 1330,120 1440,150 L1440,320 L0,320 Z"); }
-  }
-  .lava__blobs { position: absolute; inset: 0; mix-blend-mode: screen; }
-  .lava__blobs span {
-    position: absolute; bottom: -60px;
-    width: var(--s); height: var(--s); border-radius: 50%;
-    background: radial-gradient(circle at 40% 35%, #ffd27a, #ff7a3c 45%, #c33b31 70%, rgba(167,49,132,0) 78%);
-    filter: blur(6px);
-    animation: lavaBubble var(--d) ease-in-out var(--delay) infinite;
-  }
-  @keyframes lavaBubble {
-    0%   { transform: translateY(30px) scale(0.7); opacity: 0; }
-    18%  { opacity: 0.85; }
-    75%  { opacity: 0.55; }
-    100% { transform: translateY(calc(-1 * var(--rise))) scale(1.25); opacity: 0; }
-  }
+  @keyframes lavaFlow { to { background-position: 300% 0; } }
+  @keyframes lavaHaze { 0%,100% { opacity: 0.65; } 50% { opacity: 1; } }
 
   /* floating luminous particles (built in JS) */
   .motes { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
@@ -416,13 +403,12 @@
     .brand__subwrap { display: none; }
     .btn { flex: 1 1 auto; justify-content: center; }
     .hero__art { width: 82%; }
-    .lava { height: clamp(110px, 15vh, 150px); }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .brand__sub, .brand__word .bch, .hero__art, .hero__art::before, .kicker::before, .mote,
     .orb360, .orb360__ring, .orb360__ring2, .orb360__node, .em,
-    .lava__wave, .lava__wave path, .lava__blobs span { animation: none !important; }
+    .lava, .lava::before { animation: none !important; }
     h1 .hch, .brand__word .bch { transform: none !important; }
     .brand__sub { opacity: 1 !important; }
     .mote { display: none !important; }
@@ -494,22 +480,7 @@
     </div>
   </div>
 
-  <div class="lava" aria-hidden="true">
-    <div class="lava__blobs" id="lavaBlobs"></div>
-    <svg class="lava__wave lava__wave--back" viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <path d="M0,140 C180,90 340,190 560,140 C760,95 940,185 1140,135 C1260,105 1330,140 1440,125 L1440,320 L0,320 Z" fill="url(#lavaG)"/>
-    </svg>
-    <svg class="lava__wave" viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="lavaG" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#dcb920"/>
-          <stop offset="0.5" stop-color="#c33b31"/>
-          <stop offset="1" stop-color="#a73184"/>
-        </linearGradient>
-      </defs>
-      <path d="M0,120 C160,60 320,180 520,120 C720,60 900,170 1120,110 C1240,80 1300,120 1440,100 L1440,320 L0,320 Z" fill="url(#lavaG)"/>
-    </svg>
-  </div>
+  <div class="lava" aria-hidden="true"></div>
 
 
 </header>
@@ -554,23 +525,6 @@
       }
       brandWord.appendChild(s);
     });
-  }
-
-  /* ---- molten lava bubbles rising along the bottom ---- */
-  var lavaBlobs = document.getElementById("lavaBlobs");
-  if (lavaBlobs && !reduce) {
-    var lr = function (a, b) { return a + Math.random() * (b - a); };
-    var LN = window.innerWidth < 720 ? 7 : 13;
-    for (var b = 0; b < LN; b++) {
-      var sp = document.createElement("span");
-      var sz = lr(26, 68);
-      sp.style.setProperty("--s", sz.toFixed(0) + "px");
-      sp.style.setProperty("--rise", lr(90, 170).toFixed(0) + "px");
-      sp.style.setProperty("--d", lr(6, 13).toFixed(1) + "s");
-      sp.style.setProperty("--delay", (-lr(0, 12)).toFixed(1) + "s");
-      sp.style.left = lr(-2, 98).toFixed(1) + "%";
-      lavaBlobs.appendChild(sp);
-    }
   }
 
   /* ---- headline: split into characters, magnify the ones near the cursor ---- */
