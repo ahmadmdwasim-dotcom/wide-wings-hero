@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wide Wings Media</title>
+<style>
+  /* Wide Wings brand fonts — self-hosted from wide-wings.ae */
+  @font-face { font-family: "Nexa"; src: url("fonts/Nexa-Heavy.woff2") format("woff2"); font-weight: 700 900; font-display: swap; }
+  @font-face { font-family: "Nexa"; src: url("fonts/Nexa-ExtraLight.woff2") format("woff2"); font-weight: 100 400; font-display: swap; }
+  @font-face { font-family: "Calibri"; src: url("fonts/calibri.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Calibri"; src: url("fonts/calibri_bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+  /* =====================================================================
+     WIDE WINGS MEDIA — hero, version 5  ·  "Midnight Kinetic"
+     Cinematic dark hero from the Stitch design system: deep space canvas,
+     iridescent neon wings emblem, kinetic violet→cyan→ember accents,
+     Syne / Plus Jakarta Sans / Space Grotesk.
+     ===================================================================== */
+
+  :root {
+    --bg:            #0a0a1a;   /* Wide Wings deep navy */
+    --bg-2:          #0d0d2b;
+    --surface:       #12122e;
+    --surface-2:     #1c1c3c;
+    --gold:          #cfa821;   /* brand gold */
+    --gold-lt:       #dcb920;
+    --magenta:       #a73184;   /* brand magenta */
+    --magenta-lt:    #e580c0;
+    --red:           #c33b31;   /* brand warm red (gradient midpoint) */
+    --ink:           #ffffff;
+    --muted:         rgba(255,255,255,0.66);
+    --faint:         rgba(255,255,255,0.40);
+    --line:          rgba(255,255,255,0.09);
+    --line-2:        rgba(255,255,255,0.16);
+    --kinetic:       linear-gradient(120deg, #dcb920 0%, #c33b31 52%, #a73184 100%);
+
+    --head: "Nexa", "Arial Black", system-ui, sans-serif;
+    --body: "Calibri", "Segoe UI", system-ui, sans-serif;
+    --ui:   "Nexa", "Arial Black", system-ui, sans-serif;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); }
+  body {
+    font-family: var(--body);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; }
+  a { color: inherit; }
+
+  /* ---------------- shell — deep space canvas ---------------- */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(72% 50% at 50% 30%, rgba(167,49,132,0.22) 0%, rgba(167,49,132,0) 62%),
+      radial-gradient(56% 44% at 16% 78%, rgba(207,168,33,0.14) 0%, rgba(207,168,33,0) 62%),
+      radial-gradient(56% 44% at 84% 74%, rgba(195,59,49,0.12) 0%, rgba(195,59,49,0) 62%),
+      #0a0a1a;
+  }
+  .hero::after {              /* vignette */
+    content: "";
+    position: absolute; inset: 0; z-index: 6; pointer-events: none;
+    background: radial-gradient(120% 92% at 50% 40%, transparent 44%, rgba(0,0,0,0.6) 100%);
+  }
+
+  /* floating luminous particles (built in JS) */
+  .motes { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+  .mote {
+    position: absolute; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255,255,255,0.9), rgba(229,128,192,0.4) 45%, transparent 75%);
+    animation: moteRise var(--dur, 16s) linear var(--delay, 0s) infinite;
+  }
+  @keyframes moteRise {
+    0%   { transform: translateY(20px) translateX(0);       opacity: 0; }
+    12%  { opacity: var(--o, 0.7); }
+    50%  { transform: translateY(-40vh) translateX(var(--dx, 10px)); }
+    88%  { opacity: var(--o, 0.7); }
+    100% { transform: translateY(-92vh) translateX(0);      opacity: 0; }
+  }
+
+  /* ---------------- floating nav — navigation dock (Level 3) ---------------- */
+  .nav {
+    position: relative; z-index: 8;
+    margin: clamp(16px, 2.4vw, 26px) auto 0;
+    width: min(1280px, calc(100% - clamp(24px, 5vw, 60px)));
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    padding: 11px 12px 11px clamp(16px, 2vw, 22px);
+    border-radius: 999px;
+    background: rgba(11,13,20,0.92);
+    -webkit-backdrop-filter: blur(32px); backdrop-filter: blur(32px);
+    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7), 0 0 1px 1px rgba(255,255,255,0.12);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: none; }
+  .brand__mark { width: clamp(30px, 3vw, 38px); height: auto; display: block; flex: none;
+    filter: drop-shadow(0 0 10px rgba(167,49,132,0.45)); }
+  .brand__text {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    font-family: var(--head); color: var(--ink);
+  }
+  .brand__word {
+    display: flex; white-space: nowrap;
+    font-weight: 800; font-size: clamp(13px, 1.4vw, 16px);
+    letter-spacing: 0.06em; line-height: 1;
+  }
+  .brand__word .bch {
+    display: inline-block; transform-origin: 50% 55%;
+    animation: brandSpin 7s cubic-bezier(0.5, 0, 0.18, 1) calc(var(--i) * 0.11s) infinite;
+  }
+  .brand__word .bch--sp { width: 0.32em; animation: none; }
+  .brand__word .bch--bold { font-weight: 900; }
+  @keyframes brandSpin {
+    0%   { transform: rotate(0); }
+    8%   { transform: rotate(360deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .brand__subwrap { overflow: hidden; }
+  .brand__sub {
+    display: block; white-space: nowrap;
+    font-family: var(--ui); font-weight: 400; font-size: clamp(8px, 0.9vw, 9.5px);
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    animation: brandSubFly 7s cubic-bezier(0.16, 0.8, 0.3, 1) 0.12s infinite;
+  }
+  @keyframes brandSubFly {
+    0%       { transform: translateX(-118%); opacity: 0; }
+    7%       { opacity: 1; }
+    18%, 100%{ transform: translateX(0);     opacity: 1; }
+  }
+  .nav-links { display: flex; align-items: center; gap: clamp(22px, 2.8vw, 44px); }
+  .nav-links a {
+    display: inline-flex; align-items: baseline;
+    color: rgba(255,255,255,0.80); text-decoration: none;
+    font-family: var(--ui); font-weight: 500;
+    font-size: 15.5px; letter-spacing: 0.07em;
+    transition: color 0.2s var(--ease);
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta {
+    flex: none;
+    font-family: var(--ui); font-weight: 700;
+    font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 11px 20px; border-radius: 999px;
+    background: var(--kinetic);
+    color: #fff; text-decoration: none;
+    box-shadow: 0 0 22px -6px rgba(167,49,132,0.55);
+    transition: box-shadow 0.22s var(--ease), transform 0.22s var(--ease);
+  }
+  .nav-cta:hover { box-shadow: 0 0 26px rgba(167,49,132,0.7); transform: translateY(-1px); }
+  .nav-toggle { display: none; }
+
+  /* ---------------- hero — single centred column, full width ---------------- */
+  .hero__grid {
+    position: relative; z-index: 5;
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    gap: clamp(8px, 1.2vh, 14px);
+    width: 100%;
+    margin: 0 auto;
+    padding: clamp(28px, 4.5vh, 56px) clamp(20px, 6vw, 64px) clamp(24px, 4vh, 44px);
+  }
+
+  /* the iridescent neon wings emblem */
+  .hero__art {
+    position: relative;
+    width: min(516px, 58%);
+    aspect-ratio: 1175 / 512;
+    margin: clamp(-72px, -7vh, -22px) 0 clamp(-3vh, -1.6vh, -6px);
+    animation: emblemFloat 9s ease-in-out infinite;
+  }
+  .wings {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: contain; pointer-events: none;
+    filter: drop-shadow(0 0 34px rgba(255,255,255,0.22)) drop-shadow(0 0 80px rgba(167,49,132,0.24)) drop-shadow(0 0 120px rgba(207,168,33,0.12));
+  }
+  @keyframes emblemFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-12px) scale(1.008); }
+  }
+  .hero__art::before {          /* radiant aura behind the wings */
+    content: ""; position: absolute; inset: 6% 14% -10%;
+    background: radial-gradient(closest-side,
+      rgba(167,49,132,0.24), rgba(207,168,33,0.14) 44%, rgba(195,59,49,0.08) 66%, transparent 82%);
+    filter: blur(46px); z-index: -1;
+    animation: emblemHalo 4.6s ease-in-out infinite;
+  }
+  @keyframes emblemHalo {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.08); }
+  }
+
+  /* the pitch */
+  .hero__content { max-width: 72rem; }
+  #headline { overflow: visible; }
+  .cta-row { justify-content: center; }
+
+  /* ---------------- 360° growth orbit badge (top-right) ---------------- */
+  .orb360 {
+    position: absolute; z-index: 5; pointer-events: none;
+    container-type: inline-size;
+    bottom: clamp(78px, 11vh, 122px); right: clamp(20px, 3.4vw, 56px);
+    width: clamp(138px, 12vw, 176px); aspect-ratio: 1 / 1;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  @keyframes orbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .orb360__ring, .orb360__ring2 {
+    position: absolute; border-radius: 50%;
+  }
+  .orb360__ring {
+    inset: 11%;
+    border: 1.5px dashed rgba(207,168,33,0.55);
+    animation: orbSpin 30s linear infinite;
+  }
+  .orb360__ring2 {
+    inset: 11%;
+    border: 1.5px solid transparent;
+    background: conic-gradient(from -35deg, var(--red), var(--gold-lt) 30%, transparent 32%, transparent 100%) border-box;
+    -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: orbSpin 18s linear infinite reverse;
+  }
+  @keyframes orbSpin { to { transform: rotate(360deg); } }
+  .orb360__core {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .orb360__core b {
+    font-family: var(--head); font-weight: 900;
+    font-size: 21cqw; line-height: 1; color: var(--ink);
+    text-shadow: 0 0 14px rgba(229,128,192,0.5);
+  }
+  .orb360__core span {
+    margin-top: 3px;
+    font-family: var(--ui); font-weight: 700;
+    font-size: 6cqw; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold-lt);
+  }
+  /* the four icons ride a spinning orbit; each counter-spins to stay upright */
+  .orb360__orbit {
+    position: absolute; inset: 9%;
+    animation: orbSpin 30s linear infinite;
+  }
+  .orb360__node {
+    position: absolute; width: 30%; aspect-ratio: 1;
+    display: grid; place-items: center; border-radius: 50%;
+    background: rgba(10,10,26,0.88);
+    border: 1px solid rgba(207,168,33,0.45);
+    animation: orbSpin 30s linear infinite reverse, orbPulse 3.4s ease-in-out infinite;
+  }
+  .orb360__node svg { width: 46%; height: 46%; stroke: var(--gold-lt); fill: none; stroke-width: 1.7; }
+  .orb360__node--tl { top: 0;    left: 0;   animation-delay: 0s,   0s;   }
+  .orb360__node--tr { top: 0;    right: 0;  animation-delay: 0s,   0.8s; }
+  .orb360__node--bl { bottom: 0; left: 0;   animation-delay: 0s,   1.6s; }
+  .orb360__node--br { bottom: 0; right: 0;  animation-delay: 0s,   2.4s; }
+  @keyframes orbPulse {
+    0%,100% { box-shadow: 0 0 16px -4px rgba(167,49,132,0.4); }
+    50%     { box-shadow: 0 0 22px 0 rgba(207,168,33,0.55); }
+  }
+
+  /* glass badge */
+  .kicker {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--ui); font-weight: 600;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink);
+    padding: 8px 16px; border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  }
+  .kicker::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 0 rgba(207,168,33,0.5);
+    animation: radar 2.6s ease-out infinite;
+  }
+  @keyframes radar {
+    0%   { box-shadow: 0 0 0 0 rgba(207,168,33,0.5); }
+    70%  { box-shadow: 0 0 0 9px rgba(207,168,33,0); }
+    100% { box-shadow: 0 0 0 0 rgba(207,168,33,0); }
+  }
+
+  h1 {
+    font-family: var(--head); font-weight: 900;
+    font-size: clamp(1.4rem, 5.5vw, 4.6rem);
+    line-height: 1.04; letter-spacing: -0.01em;
+    margin: clamp(10px, 2.4vh, 22px) auto 0;
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-shadow:
+      0 0 22px rgba(255,255,255,0.30),
+      0 0 60px rgba(229,128,192,0.30),
+      0 0 110px rgba(167,49,132,0.24);
+  }
+  h1 .hw { display: inline-block; }
+
+  /* flowing brand shimmer on WINGS */
+  h1 .em {
+    position: relative;
+    background: linear-gradient(105deg, #a73184 0%, #e580c0 35%, #ffffff 50%, #e580c0 65%, #dcb920 100%);
+    background-size: 260% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: winGrad 7s linear infinite;
+  }
+  @keyframes winGrad { to { background-position: 260% 0; } }
+
+  /* per-character magnifier */
+  h1 .hch {
+    display: inline-block;
+    transform-origin: 50% 66%;
+    transition: transform 0.16s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: transform;
+  }
+
+  .lede {
+    margin: clamp(14px, 2.4vh, 22px) auto 0; max-width: min(66ch, 94vw);
+    font-family: var(--body); font-size: clamp(1.06rem, 1.55vw, 1.24rem);
+    line-height: 1.62; letter-spacing: 0.012em; color: var(--muted);
+    text-wrap: balance;
+  }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: clamp(22px, 3.4vh, 34px); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--ui); font-weight: 700;
+    font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase;
+    text-decoration: none; padding: 15px 30px; border-radius: 999px;
+    cursor: pointer; border: 1px solid transparent;
+    transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), background 0.22s var(--ease), border-color 0.22s var(--ease);
+  }
+  .btn--primary {                             /* brand kinetic action */
+    color: #fff;
+    background: var(--kinetic);
+    box-shadow: 0 0 25px -4px rgba(167,49,132,0.45);
+  }
+  .btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 32px rgba(167,49,132,0.6);
+  }
+  .btn--primary svg { transition: transform 0.22s var(--ease); }
+  .btn--primary:hover svg { transform: translateX(4px); }
+  .btn--ghost {                               /* ghost prism */
+    color: var(--ink);
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.16);
+  }
+  .btn--ghost:hover { background: rgba(255,255,255,0.08); border-color: var(--gold); }
+
+  /* ---------------- services marquee — "what we do" ---------------- */
+  .ticker {
+    position: relative; z-index: 7;
+    display: flex; align-items: stretch;
+    border-top: 1px solid var(--line);
+    background: rgba(7,8,12,0.72);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  .ticker__label {
+    flex: none; display: flex; align-items: center;
+    padding: 16px clamp(16px, 3vw, 32px);
+    font-family: var(--ui); font-weight: 900;
+    font-size: clamp(11px, 1.1vw, 13px); letter-spacing: 0.2em; text-transform: uppercase;
+    color: #fff;
+    background: var(--kinetic);
+    white-space: nowrap;
+  }
+  .ticker__view { flex: 1; overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .ticker__track {
+    display: inline-flex; align-items: center; gap: clamp(18px, 2.4vw, 34px);
+    padding: 16px 0; white-space: nowrap; will-change: transform;
+    animation: tickerRoll 42s linear infinite;
+  }
+  .ticker:hover .ticker__track { animation-play-state: paused; }
+  @keyframes tickerRoll { to { transform: translateX(-50%); } }
+  .svc {
+    font-family: var(--ui); font-weight: 600;
+    font-size: clamp(13px, 1.3vw, 15px); letter-spacing: 0.02em;
+  }
+  .svc--v { color: var(--gold-lt); }
+  .svc--c { color: var(--magenta-lt); }
+  .svc--e { color: #ffffff; }
+  .svc__sep { color: var(--gold); font-size: 0.8em; }
+
+  /* ---------------- responsive ---------------- */
+  @media (max-width: 1240px) {
+    .orb360 { display: none; }
+  }
+  @media (max-width: 1000px) {
+    .nav-links, .nav-cta { display: none; }
+    .nav { width: calc(100% - clamp(20px, 6vw, 40px)); }
+    .nav-toggle {
+      display: block; width: 40px; height: 40px; flex: none;
+      border: 1px solid var(--line); border-radius: 12px; background: none;
+    }
+    .nav-toggle i, .nav-toggle::before, .nav-toggle::after {
+      content: ""; display: block; width: 17px; height: 2px; margin: 3px auto; background: #fff;
+    }
+    .hero__grid { padding-top: clamp(28px, 5vh, 56px); }
+    .hero__art { width: min(430px, 86%); margin-bottom: -1vh; }
+  }
+  @media (max-width: 560px) {
+    .nav { padding: 9px 9px 9px 14px; }
+    .brand__subwrap { display: none; }
+    .btn { flex: 1 1 auto; justify-content: center; }
+    .hero__art { width: 82%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand__sub, .brand__word .bch, .hero__art, .hero__art::before, .kicker::before, .mote,
+    .orb360, .orb360__ring, .orb360__ring2, .orb360__node, .em { animation: none !important; }
+    h1 .hch, .brand__word .bch { transform: none !important; }
+    .brand__sub { opacity: 1 !important; }
+    .mote { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+
+  <div class="motes" id="motes" aria-hidden="true"></div>
+
+  <nav class="nav">
+    <a class="brand" href="#" aria-label="Wide Wings Media home">
+      <img class="brand__mark" src="logo-mark.png" alt="" />
+      <span class="brand__text">
+        <span class="brand__word" id="brandWord" aria-hidden="true">WIDE WINGS</span>
+        <span class="brand__subwrap"><small class="brand__sub">Media &amp; Advertisement</small></span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Services</a>
+      <a href="#">Work</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <a class="nav-cta" href="#">Start a project</a>
+    <button class="nav-toggle" aria-label="Menu"><i></i></button>
+  </nav>
+
+  <div class="orb360" aria-hidden="true">
+    <div class="orb360__ring"></div>
+    <div class="orb360__ring2"></div>
+    <div class="orb360__core"><b>360&deg;</b><span>Growth</span></div>
+    <div class="orb360__orbit">
+      <span class="orb360__node orb360__node--tl">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15 19a4.5 4.5 0 0 1 6.5-4"/></svg>
+      </span>
+      <span class="orb360__node orb360__node--tr">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/></svg>
+      </span>
+      <span class="orb360__node orb360__node--bl">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5"/></svg>
+      </span>
+      <span class="orb360__node orb360__node--br">
+        <svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 20v-6M13 20V9M18 20v-9"/><path d="M7 11l4-4 3 2 4-5"/></svg>
+      </span>
+    </div>
+  </div>
+
+  <div class="hero__grid">
+    <div class="hero__art" aria-hidden="true">
+      <img class="wings" src="wings-emblem.png?v=13" alt="" />
+    </div>
+
+    <div class="hero__content">
+      <span class="kicker">Media &amp; Advertisement</span>
+      <h1 id="headline"><span class="hw">Give</span> <span class="hw">your</span> <span class="hw">brand</span> <span class="hw"><span class="em">WINGS</span></span></h1>
+      <p class="lede">Strategy, creative and media under one roof. We build brands that fly &mdash; and keep them airborne with work that performs.</p>
+      <div class="cta-row">
+        <a class="btn btn--primary" href="#">
+          Free Consultation
+          <svg width="15" height="11" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+            <path d="M1 6h13M9 1l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a class="btn btn--ghost" href="#">Explore Services</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker" aria-label="What we do">
+    <span class="ticker__label">What we do</span>
+    <div class="ticker__view">
+      <div class="ticker__track" id="tickerTrack">
+        <span class="svc svc--v">Web &amp; App Development</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--c">Creative &amp; Branding</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--e">Paid Advertising</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--v">Media Buying</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--c">Social Media Management</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--e">Content Creation</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--v">Email Marketing</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--c">SEO Management</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--e">OOH Advertising</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--v">Analytics &amp; Performance Marketing</span><span class="svc__sep">&#10022;</span>
+        <span class="svc svc--c">PR Management</span><span class="svc__sep">&#10022;</span>
+      </div>
+    </div>
+  </div>
+
+</header>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- floating luminous particles ---- */
+  var motes = document.getElementById("motes");
+  if (motes && !reduce) {
+    var rnd = function (a, b) { return a + Math.random() * (b - a); };
+    var N = window.innerWidth < 720 ? 16 : 30;
+    for (var m = 0; m < N; m++) {
+      var d = document.createElement("span");
+      d.className = "mote";
+      var sz = rnd(2, 6);
+      d.style.width = d.style.height = sz.toFixed(1) + "px";
+      d.style.left = rnd(4, 96).toFixed(1) + "%";
+      d.style.bottom = rnd(-6, 40).toFixed(1) + "%";
+      d.style.setProperty("--dur", rnd(11, 24).toFixed(1) + "s");
+      d.style.setProperty("--delay", (-rnd(0, 22)).toFixed(1) + "s");
+      d.style.setProperty("--dx", rnd(-40, 40).toFixed(0) + "px");
+      d.style.setProperty("--o", rnd(0.35, 0.9).toFixed(2));
+      d.style.filter = "blur(" + rnd(0, 0.8).toFixed(2) + "px)";
+      motes.appendChild(d);
+    }
+  }
+
+  /* ---- nav wordmark: per-character spin loop ---- */
+  var brandWord = document.getElementById("brandWord");
+  if (brandWord) {
+    var text = brandWord.textContent, boldFrom = text.indexOf(" ") + 1, vis = 0;
+    brandWord.textContent = "";
+    text.split("").forEach(function (chr, idx) {
+      var s = document.createElement("span");
+      if (chr === " ") { s.className = "bch bch--sp"; }
+      else {
+        s.className = "bch" + (idx >= boldFrom ? " bch--bold" : "");
+        s.textContent = chr; s.style.setProperty("--i", vis++);
+      }
+      brandWord.appendChild(s);
+    });
+  }
+
+  /* ---- services marquee: duplicate the run for a seamless loop ---- */
+  var tt = document.getElementById("tickerTrack");
+  if (tt) {
+    tt.innerHTML += tt.innerHTML;
+    if (reduce) { tt.style.animation = "none"; }
+  }
+
+  /* ---- headline: split into characters, magnify the ones near the cursor ---- */
+  var headline = document.getElementById("headline");
+  if (headline) {
+    headline.querySelectorAll(".hw").forEach(function (word) {
+      Array.prototype.slice.call(word.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) {                       // raw text -> per-char spans
+          var frag = document.createDocumentFragment();
+          node.textContent.split("").forEach(function (chr) {
+            if (chr === " ") { frag.appendChild(document.createTextNode(" ")); return; }
+            var s = document.createElement("span");
+            s.className = "hch";
+            s.textContent = chr;
+            frag.appendChild(s);
+          });
+          word.replaceChild(frag, node);
+        } else if (node.classList && node.classList.contains("grad")) {
+          var txt = node.textContent, gf = document.createDocumentFragment();
+          txt.split("").forEach(function (chr) {
+            var s = document.createElement("span");
+            s.className = "hch hch--grad";
+            s.textContent = chr;
+            gf.appendChild(s);
+          });
+          node.textContent = "";
+          node.appendChild(gf);
+        } else if (node.classList) {                     // capG / thinY — already one char
+          node.classList.add("hch");
+        }
+      });
+    });
+
+    if (!reduce) {
+      var hchars = Array.prototype.slice.call(headline.querySelectorAll(".hch"));
+      var hc = [];
+      var HR = 135, HAMP = 0.55, HLIFT = 9;
+
+      var hmeasure = function () {
+        hchars.forEach(function (c) { c.style.transform = ""; });
+        hc = hchars.map(function (c) {
+          var r = c.getBoundingClientRect();
+          return { c: c, x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        });
+      };
+      var hmove = function (e) {
+        for (var i = 0; i < hc.length; i++) {
+          var p = hc[i], dx = e.clientX - p.x, dy = e.clientY - p.y;
+          var d = Math.sqrt(dx * dx + dy * dy);
+          var tt = d < HR ? (1 - d / HR) : 0;
+          tt = tt * tt;
+          p.c.style.transform = tt
+            ? "translateY(" + (-HLIFT * tt) + "px) scale(" + (1 + HAMP * tt) + ")"
+            : "";
+        }
+      };
+      var hreset = function () { hchars.forEach(function (c) { c.style.transform = ""; }); };
+
+      headline.addEventListener("pointerenter", hmeasure);
+      headline.addEventListener("pointermove", hmove);
+      headline.addEventListener("pointerleave", hreset);
+      window.addEventListener("resize", hreset);
+    }
+  }
+
+})();
+</script>
+</body>
+</html>
